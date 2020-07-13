@@ -77,3 +77,5 @@ RUN apt-get update \
 # Update this to "on" or "off" as appropriate
 ENV GO111MODULE=auto
 
+# Set JST
+ENV TZ JST-9
