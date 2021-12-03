@@ -14,12 +14,14 @@ type LicenseSummary struct {
 type License struct {
 //	XMLName xml.Name `xml:"license"`
 	Name string `xml:"name"`
+	Url string `xml:"url"`
 }
 
 type Dependency struct {
 //	XMLName xml.Name `xml:"dependency"`
 	GroupId string `xml:"groupId"`
 	ArtifactId string `xml:"artifactId"`
+	Version string `xml:"version"`
 	Licenses []License `xml:"licenses>license"`
 }
 
@@ -30,18 +32,27 @@ func main() {
 	_ = xml.Unmarshal([]byte(data), &s)
 
 	for _, dep := range s.Dependencies {
-		var l string
+		var l License
 		if len(dep.Licenses) > 0 {
 			// TODO: select preferred license
-			l = dep.Licenses[0].Name
+			l = dep.Licenses[0]
 		} else {
 			// TODO: read license from another list
-			l = "NOT FOUND"
+			l = License{
+				Name: "NOT FOUND",
+				Url: "NOT FOUND",
+			}
 		}
 		// TODO: output license url
 		fmt.Printf(`
 [ライブラリ名] %s
-[ライセンス]　%s
-`, dep.ArtifactId, l)
+[ バージョン ] %s
+[ ライセンス ] %s
+[    URL     ] %s
+`,
+			dep.ArtifactId,
+			dep.Version,
+			l.Name,
+			l.Url)
 	}
 }
