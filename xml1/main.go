@@ -30,6 +30,15 @@ func main() {
 	_ = xml.Unmarshal([]byte(data), &s)
 
 	for _, dep := range s.Dependencies {
-		fmt.Println(dep)
+		var l string
+		if len(dep.Licenses) > 0 {
+			l = dep.Licenses[0].Name
+		} else {
+			l = "NOT FOUND"
+		}
+		fmt.Printf(`
+[ライブラリ名] %s
+[ライセンス]　%s
+`, dep.ArtifactId, l)
 	}
 }
