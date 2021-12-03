@@ -32,10 +32,13 @@ func main() {
 	for _, dep := range s.Dependencies {
 		var l string
 		if len(dep.Licenses) > 0 {
+			// TODO: select preferred license
 			l = dep.Licenses[0].Name
 		} else {
+			// TODO: read license from another list
 			l = "NOT FOUND"
 		}
+		// TODO: output license url
 		fmt.Printf(`
 [ライブラリ名] %s
 [ライセンス]　%s
