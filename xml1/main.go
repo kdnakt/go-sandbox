@@ -43,7 +43,6 @@ func main() {
 				Url: "NOT FOUND",
 			}
 		}
-		// TODO: output license url
 		fmt.Printf(`
 [ライブラリ名] %s
 [ バージョン ] %s
