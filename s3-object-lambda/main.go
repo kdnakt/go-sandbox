@@ -22,7 +22,8 @@ func init() {
 }
 
 func hello(ctx context.Context, event S3ObjectLambdaEvent) (string, error) {
-	c := event.Context
+	fmt.Printf("[debug] %+v", event) 
+	c := event.GetObjectContext
 	fmt.Printf("[%s] %s - %s", c.InputS3Url, c.OutputRoute, c.OutputToken)
 
 	resp, err := http.Get(c.InputS3Url)
@@ -51,12 +52,57 @@ func main() {
 
 // Implementation for aws-lambda-go/events
 type S3ObjectLambdaEvent struct {
-	Context	GetObjectContext	`json:"getObjectContext"`
+	XAmzRequestId		string			`json:"xAmzrequestId"`
+	GetObjectContext	GetObjectContext	`json:"getObjectContext"`
+	ListObjectsContext	ObjectContext		`json:"listObjectsContext"`
+	ListObjectsV2Context	ObjectContext		`json:"listObjectsV2Context"`
+	HeadObjectContext	ObjectContext		`json:"headObjectContext"`
+	Configuration		Configuration		`json:"configuration"`
+	UserRequest		UserRequest		`json:"userRequest"`
+	UserIdentity		UserIdentity		`json:"userIdentity"`
+	ProtocolVersion		string			`json:"protocolVersion"`
 }
 
 type GetObjectContext struct {
 	InputS3Url	string	`json:"inputS3Url"`
 	OutputRoute	string	`json:"outputRoute"`
 	OutputToken	string	`json:"outputToken"`
+}
+
+type ObjectContext struct {
+	InputS3Url	string	`json:"inputS3Url"`
+}
+
+type Configuration struct {
+	AccessPointArn			string	`json:"accessPointArn"`
+	SupportingAccessPointArn	string	`json:"supportingAccessPointArn"`
+	payload				string	`json:"payload"`
+}
+
+type UserRequest struct {
+	url	string			`json:"url"`
+	headers	map[string]string	`json:"headers"`
+}
+
+type UserIdentity struct {
+	Type		string		`json:"type"`
+	PrincipalId	string		`json:"principalId"`
+	Arn		string		`json:"arn"`
+	AccountId	string		`json:"accountId"`
+	AccessKeyId	string		`json:"accessKeyId"`
+	SessionContext	SessionContext	`json:"sessionContext"`
+}
+
+type SessionContext struct {
+	Attributes	map[string]string	`json:"attributes"`
+	SessionIssuer	SessionIssuer		`json:"sessionIssuer"`
+}
+
+type SessionIssuer struct {
+	Type		string	`json:"type"`
+	PrincipalId	string	`json:"principalId"`
+	Arn		string	`json:"arn"`
+	AccountId	string	`json:"accountId"`
+	UserName	string	`json:"userName"`
 }
 
